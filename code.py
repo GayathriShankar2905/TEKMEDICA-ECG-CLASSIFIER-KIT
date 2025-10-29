@@ -1,15 +1,3 @@
-import scipy.io
-
-file_path = r"C:\Users\GAYATHRI\Downloads\AFIB2.mat"  # update path if needed
-mat = scipy.io.loadmat(file_path)
-
-print("🔍 Keys in this .mat file:")
-for k, v in mat.items():
-    if not k.startswith("__"):
-        try:
-            print(f"{k}: type={type(v)}, shape={getattr(v, 'shape', 'N/A')}")
-        except Exception:
-            print(f"{k}: {type(v)}")
-
-import os
-print("Current working directory:", os.getcwd())
+import joblib
+model = joblib.load("xgb_ecg_model.joblib")
+print(model)

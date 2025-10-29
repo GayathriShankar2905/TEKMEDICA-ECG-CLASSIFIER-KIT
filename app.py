@@ -20,28 +20,18 @@ PAGE_ICON = "🫀"
 st.set_page_config(page_title=PAGE_TITLE, page_icon=PAGE_ICON, layout="wide")
 
 # -------- LOAD MODEL (fixed single section) --------
-MODEL_PATH = os.path.join(os.getcwd(), "xgb_ecg_model.joblib")
+import joblib
+
+MODEL_PATH = "xgb_ecg_model.joblib"
 
 try:
-    model_bundle = joblib.load(MODEL_PATH)
-
-    if isinstance(model_bundle, dict):
-        model = model_bundle.get("model", None)
-        scaler = model_bundle.get("scaler", None)
-        feature_names = model_bundle.get("feature_names", None)
-    else:
-        model = model_bundle
-        scaler = None
-        feature_names = None
-
-    if model is None:
-        raise ValueError("No valid model found inside joblib file.")
-
-    st.success(f"✅ Model loaded successfully from: {MODEL_PATH}")
-
+    model_dict = joblib.load(MODEL_PATH)
+    model = model_dict['model']
+    scaler = model_dict['scaler']
+    feature_names = model_dict['feature_names']
+    print("✅ Model and scaler loaded successfully!")
 except Exception as e:
-    st.error(f"❌ Error loading model from {MODEL_PATH}: {e}")
-    st.stop()
+    print(f"❌ Error loading model from {MODEL_PATH}: {e}")
 
 # -------- STYLES --------
 st.markdown(
@@ -244,7 +234,9 @@ elif page == "Model Info":
     st.subheader("Model Information & Feature Importances")
     st.write("**Model type:**", type(model).__name__)
     if hasattr(model, "get_params"):
-        st.json({k: v for k, v in list(model.get_params().items())[:12]})
+        params = {k: v for k, v in model.get_params().items() if v is not None}
+        st.json(params)
+
     try:
         if hasattr(model, "feature_importances_"):
             fi = model.feature_importances_
