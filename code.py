@@ -10,3 +10,6 @@ for k, v in mat.items():
             print(f"{k}: type={type(v)}, shape={getattr(v, 'shape', 'N/A')}")
         except Exception:
             print(f"{k}: {type(v)}")
+
+import os
+print("Current working directory:", os.getcwd())
