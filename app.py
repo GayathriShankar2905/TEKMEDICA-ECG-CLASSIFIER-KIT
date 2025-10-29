@@ -13,7 +13,21 @@ import os
 import seaborn as sns
 
 # -------- CONFIG --------
-MODEL_PATH = r"D:\Tekmedica ML Model Page\xgb_ecg_model.joblib"
+import os
+import joblib
+
+# Dynamically locate model file
+MODEL_PATH = os.path.join(os.getcwd(), "xgb_ecg_model.joblib")
+
+try:
+    model_bundle = joblib.load(MODEL_PATH)
+    model = model_bundle["model"]
+    feature_names = model_bundle["features"]
+    print(f"✅ Model loaded successfully from: {MODEL_PATH}")
+except Exception as e:
+    st.error(f"Error loading model from {MODEL_PATH}: {e}")
+    st.stop()
+
 PAGE_TITLE = "TekMedica — ECG Classification Kit"
 PAGE_ICON = "🫀"
 
@@ -349,7 +363,7 @@ elif page == "About TekMedica":
     - Explanation and visualization for learning purposes
 
     **Built by:** Gayathri S.H @TEKMEDICA  
-    **Contact:** (add email or GitHub link here)
+    **Contact:** pcmjs.gayathri@gmail.com
     """)
     st.markdown('</div>', unsafe_allow_html=True)
 
